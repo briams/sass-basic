@@ -1,0 +1,257 @@
+$color: green;
+.header {
+    background: yellow;
+    color: $color;
+    font-size: 2em;
+}
+
+// variables en sass declaradas con $ adelante
+$size: 200px;
+
+//Uso de la variable declarada
+body {
+	padding-top: $size;
+}
+
+$width: 20px;
+//Además se pueden hacer operaciones con las variables
+body {
+	padding-top: $size * 2;     //multiplicación
+	padding-top: $size / 2;     //división
+	padding-top: $size + 2;     //suma
+	padding-top: $size - 2;     //resta
+
+	margin: $width;
+}
+
+p {
+	$size: 20px;
+	margin: $width;
+	padding-top: $size;
+}
+// declaracion de variables por defecto
+$primary-color: red;
+$primary-color: blue !default; // es un valor por defecto no reemplaza al valor anterior
+
+body {
+	color: $primary-color;
+}
+
+
+$color: red;
+// interpolacion de variables
+// tambien se debe usar dentro de los calc() de css
+.#{$color} {
+	color: $color;
+	width: calc(100% - #{$size});
+}
+
+
+// anidamiento
+ul {
+	margin: 0;
+	display:  block;
+	animation: menu 1s;
+	// con seudoclases
+	&:hover{
+		color: green;
+	}
+	&::before {
+		content: "EDteam";
+	}
+	// con media querys
+	@media screen and (min-width: 640px) {
+		display: flex;
+	}
+	@keyframes menu {
+		to {
+			color: red;
+		}
+		
+	}
+}
+
+// anidamiento de clases
+.menu {
+	display: block;
+	&-item {
+		color: red;
+	}
+	// anidamiento de clases
+	grid-template: {
+		columns: 100px 100px;
+		rows: auto;
+	}
+}
+
+
+// tipos de datos
+
+// numero
+$num1: 10px;
+$num2: 10em;
+$num3: 10s;
+
+// string 
+
+$string1: unquote("imagen.jpg");
+$string1: "imagen.jpg";
+
+//colores
+
+$color1: red;
+$color2: rgb(100,100,100);
+$color3: #999;
+
+// booleano
+$bool1: true; 
+$bool2: false; 
+
+//maps
+
+$colores: (
+	primary: #aaa,
+	secundary: #979413,
+	error: #489111
+);
+// map-get(variable map, nombre del campo del map a obtener)
+
+// listas
+$list: 10px 20px 30px;
+
+body {
+	background: type-of($colores);
+	//uso del map
+	color: map-get($colores , primary );
+}
+// importando
+@import "menu";
+
+@import "components/base";
+@import "components/buttons";
+
+
+// placeholder
+%button {
+    display: inline-block;
+    margin: 2em 0;
+    padding: .5em 1.5em;
+}
+// expender de placeholder
+.button {
+    @extend %button;
+    span {
+
+    }
+}
+// extender de selectores
+.button-alert {
+    @extend .button;
+    background: red;
+    color: #fff;
+}
+
+$dev: false !default;
+// $dev: true;
+// condiciones
+@if $dev {
+    * {
+        outline: 1px solid red;
+    }
+} @else {
+    * {
+        display: block;
+    }
+}
+
+@if 5 < 3  {
+    * {
+        outline: 1px solid red;
+    }
+} @else if 3 < 5  and 1 != 1 {
+    * {
+        display: block;
+    }
+} @else {
+    * {
+        color: green;
+    }    
+}
+
+// Iteraciones
+// for entre un rango
+@for $i from 1 through 20 {
+    @if $i % 2 == 0 {
+        .column-#{$i * 5} {
+            width: $i * 5%;
+        }
+    }
+}
+
+
+// ciclo each
+$colors: red green blue;
+@each $color in $colors {
+    .button-#{$color} {
+        background: $color;
+    }
+}
+
+$colors: (
+    primary: yellow,
+    secondary: green,
+    tertiary: blue
+);
+$brakpoints: (
+    small: 360px,
+    medium: 640px,
+    large: 1024px,
+    xlarge: 1400px
+);
+@each $key, $value in $colors {    
+    .button-#{$key} {
+        background: $value;
+    }
+}
+
+// agregar elementos a una lista
+$colors: hsl(0,100,50);
+@for $i from 1 through 360 {
+  $colors: append($colors, hsl($i,100,50), comma);
+}
+
+body {
+  background: radial-gradient($colors);
+  min-height:100vh
+}
+
+
+@import "config/variables";
+$buttons: true;
+@import "mixins/mixins";
+.button {
+    @include button;
+}
+
+@include buttons(red);
+
+.menu {
+    @include menu;
+}
+
+.menu {
+    //argumentos de un mixin
+    @include menu('.menu--child', '.link-menu');
+}
+
+@include buttons-colors(red, green, blue);
+@include buttons-colors-map(map-keys($button-colors)...);
+
+.menu {
+    // mixin con contenido
+    @include menu {
+        width: 30%;
+    };
+}
+
+

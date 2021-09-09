@@ -1,0 +1,77 @@
+@mixin button {
+  display: inline-block;
+  margin: 1em;
+  a {
+    text-decoration: none;
+  }
+}
+
+@mixin buttons($color) {
+    @if $buttons {
+        .button {
+            display: inline-block;
+            margin: 1em;
+            color: $color;
+            a {
+                text-decoration: none;
+            }
+        }
+    }
+}
+// mixin con parametros
+@mixin menu($selector-item: 'li', $selector-link: 'a') {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style: none;
+    #{$selector-item} {
+        display: block;
+    }
+    #{$selector-link} {
+        text-decoration: none;
+        display: block;
+    }
+
+    .extra {
+        @content;
+    }
+}
+// multiples parametros
+@mixin buttons-colors($colors...) {
+    @if $buttons {
+        .button {
+            display: inline-block;
+            margin: 1em;
+            color: nth($colors,1);
+            a {
+                text-decoration: none;
+            }
+            @for $i from 2 through length($colors) {
+                &.#{ nth($colors, $i) } {
+                    color: #{ nth($colors, $i) };
+                }
+            }
+        }
+    }
+}
+
+// multiples parametros
+@mixin buttons-colors-map($colors...) {
+    @if $buttons {
+        .button {
+            display: inline-block;
+            margin: 1em;
+            color: map-get($button-colors,nth($colors,1));
+            a {
+                text-decoration: none;
+            }
+            @for $i from 2 through length($colors) {
+                &.#{ nth($colors, $i) } {
+                    color: map-get($button-colors,nth($colors,$i));
+                }
+            }
+        }
+    }
+}
+
+
